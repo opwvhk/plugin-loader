@@ -1,0 +1,81 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.sf.opk</groupId>
+		<artifactId>opk-parent</artifactId>
+		<version>9</version>
+	</parent>
+	<groupId>opwvhk</groupId>
+	<artifactId>plugin-loader</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+	<name>Plugin Loader</name>
+	<description>
+		A simple plugin loader, loading isolated plugins with their own classpath.
+		The application and the plugins share access to platform and service classes -- without a proxy or reflection.
+	</description>
+
+	<inceptionYear>2024</inceptionYear>
+
+	<properties>
+		<!-- Build configurations -->
+		<maven.compiler.release>21</maven.compiler.release>
+		<maven.compiler.parameters>true</maven.compiler.parameters><!--default: false-->
+		<!-- Dependency versions -->
+		<junit-platform-engine.version>1.10.2</junit-platform-engine.version>
+		<junit-jupiter.version>5.10.2</junit-jupiter.version>
+		<org.slf4j.version>2.0.13</org.slf4j.version>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>5.10.2</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<!-- Making  -->
+		<dependency>
+			<!-- Contains source & class annotations only: none of these annotations are available at runtime -->
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>24.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.25.3</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<defaultGoal>clean verify</defaultGoal>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
