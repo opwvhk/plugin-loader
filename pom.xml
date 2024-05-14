@@ -65,6 +65,28 @@
 		<defaultGoal>clean verify</defaultGoal>
 		<plugins>
 			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<excludes>
+						<!-- Copy of a class in xmlschema-walker with a fix for XMLSCHEMA-64 applied -->
+						<exclude>**/FixedXmlSchemaWalker.*</exclude>
+						<!-- Old and PoC code -->
+						<exclude>**/*Test*</exclude>
+						<exclude>**/*Old*</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.3.0</version>

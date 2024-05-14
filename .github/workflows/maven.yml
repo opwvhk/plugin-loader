@@ -1,24 +1,61 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Java CI with Maven
+name: Maven Build
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - .github/**.yml
+      - src/**
+      - pom.xml
   pull_request:
     branches: [ main ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    permissions:
+      checks: write
+      contents: read
+      packages: read
+    # If uncommented, set the java version below to ${{matrix.java}}
+    #strategy:
+    #  matrix:
+    #    java: [ '11', '17', '21' ]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Java
-      uses: actions/setup-java@v1
-      with:
-        java-version: 21
-    - name: Build with Maven
-      run: mvn --batch-mode
+      # Note: this action must be first, as actions/setup-java needs it to set up the maven cache
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up the Java JDK
+        uses: actions/setup-java@v4
+        with:
+          # Since August 2021, this replaces AdoptOpenJDK ('adopt')
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+          check-latest: true
+
+      - name: Build with Maven and Run Tests
+        run: mvn --batch-mode --update-snapshots verify
+
+      - name: Archive code coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: target/site/jacoco/
+          retention-days: 2
+
+      - name: Publish Test Coverage Results
+        # noinspection SpellCheckingInspection
+        uses: PavanMudigonda/jacoco-reporter@v4.9
+        with:
+          coverage_results_path: 'target/site/jacoco/jacoco.xml'
+          coverage_report_title: 'Test Coverage Results'
+          coverage_report_name: 'Test Coverage Results'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+# Option: use GitHub secrets to add deployment to Maven Central. See:
+# https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#publishing-using-apache-maven
