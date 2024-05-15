@@ -54,9 +54,8 @@ The code above loads plugins from your plugin path, which is a set of directorie
 	│  └─ metadata-file.txt
 	├─ ...
 
-
 In this directory, we see two plugins: "single-fat-jar" and "folder-structure". The plugin names are
-taken from the names in the  directory, and will only be unique if you're using a single directory
+taken from the names in the directory, and will only be unique if you're using a single directory
 as plugin path.
 
 The plugins themselves:
@@ -89,3 +88,10 @@ reflection are needed to use the services provided by plugins.
 As a bonus, the parent-first model hides any platform and service classes included in the plugin.
 So if a plugin erroneously includes the service classes as well (e.g., by marking them as
 compile/implementation dependencies instead of provided/compileOnly dependencies), these are hidden.
+
+Logging
+-------
+
+When loading plugins, this library uses the Java 9 `System.Logger` framework to log progress.
+Although this falls back to `java.util.logging`, modern frameworks like SLF4J and Log4J also provide
+platform loggers. 

@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
 
 /**
  * <p>Entry point to use plugins.</p>
@@ -31,7 +33,7 @@ import java.util.logging.Logger;
  * @see FilteringClassLoader
  */
 public class Plugins {
-	private static final Logger LOG = Logger.getLogger(Plugins.class.getCanonicalName());
+	private static final System.Logger LOG = System.getLogger(Plugins.class.getCanonicalName());
 	private final Collection<Plugin> plugins;
 
 	/**
@@ -63,7 +65,7 @@ public class Plugins {
 
 	@VisibleForTesting
 	Plugins(Set<Path> pluginPath, ClassLoader pluginParentClassLoader) throws IOException {
-		LOG.info(() -> "Loading plugins from " + pluginPath);
+		LOG.log(INFO, "Loading plugins from {0}", pluginPath);
 		plugins = new ArrayList<>();
 		for (Path pluginPathElement : pluginPath) {
 			Files.walkFileTree(pluginPathElement, EnumSet.noneOf(FileVisitOption.class), 2, new SimpleFileVisitor<>() {
@@ -76,7 +78,7 @@ public class Plugins {
 					if (!startedInDirectory) {
 						startedInDirectory = true;
 					} else {
-						LOG.info(() -> "Found plugin at " + dir);
+						LOG.log(DEBUG, "Found directory plugin at {0}", dir);
 						pluginBasePath = dir;
 						classpath = new ArrayList<>();
 					}
@@ -89,14 +91,14 @@ public class Plugins {
 						throw new IOException("A plugin directory must be a directory");
 					} else if (isFileOrDirectory(attrs)) {
 						if (classpath != null) {
-							LOG.info(() -> "Found classpath entry: " + path);
+							LOG.log(DEBUG, "Found classpath entry: {0}", path);
 							if (attrs.isDirectory() || path.getFileName().toString().endsWith(".jar")) {
 								classpath.add(path);
 							}
 						} else if (path.getFileName().toString().endsWith(".jar")){
-							LOG.info(() -> "Found .jar-only plugin at " + path);
+							LOG.log(DEBUG, "Found .jar-only plugin at {0}", path);
 							Plugin plugin = new Plugin(pluginParentClassLoader, path);
-							LOG.info(() -> "Created plugin " + plugin.getName());
+							LOG.log(INFO, "Created plugin {0}", plugin.getName());
 							plugins.add(plugin);
 						}
 					}
@@ -108,7 +110,7 @@ public class Plugins {
 					// classpath is null when terminating at the pluginPathElement
 					if (classpath != null) {
 						Plugin plugin = new Plugin(pluginParentClassLoader, pluginBasePath, classpath);
-						LOG.info(() -> "Created plugin " + plugin.getName());
+						LOG.log(INFO, "Created plugin {0}", plugin.getName());
 						plugins.add(plugin);
 
 						pluginBasePath = null;
