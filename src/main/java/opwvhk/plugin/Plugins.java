@@ -93,7 +93,7 @@ public class Plugins {
 							if (attrs.isDirectory() || path.getFileName().toString().endsWith(".jar")) {
 								classpath.add(path);
 							}
-						} else {
+						} else if (path.getFileName().toString().endsWith(".jar")){
 							LOG.info(() -> "Found .jar-only plugin at " + path);
 							Plugin plugin = new Plugin(pluginParentClassLoader, path);
 							LOG.info(() -> "Created plugin " + plugin.getName());

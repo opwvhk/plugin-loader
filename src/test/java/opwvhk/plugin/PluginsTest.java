@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -51,6 +52,8 @@ class PluginsTest {
 		Files.createSymbolicLink(plugin1Path.resolve(NOT_A_FILE), plugin1Path.resolve("missing"));
 
 		plugin2Path = Files.write(pluginFolder.resolve("plugin2.jar"), fooZip);
+
+		Files.write(pluginFolder.resolve("random_file.txt"), List.of("I should be ignored"));
 
 		parentClassLoader = new FilteringClassLoader("test", ClassLoader.getSystemClassLoader(), c -> !c.equals(FooImpl.class), r -> false);
 		Plugins plugins = new Plugins(singleton(pluginFolder), parentClassLoader);
