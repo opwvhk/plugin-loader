@@ -43,7 +43,7 @@
 			<!-- Contains source & class annotations only: none of these annotations are available at runtime -->
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
-			<version>25.0.0</version>
+			<version>26.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 
