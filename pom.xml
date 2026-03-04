@@ -4,10 +4,10 @@
 	<parent>
 		<groupId>net.sf.opk</groupId>
 		<artifactId>opk-parent</artifactId>
-		<version>12</version>
+		<version>15</version>
 	</parent>
 	<artifactId>plugin-loader</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 
 	<name>Plugin Loader</name>
 	<description>
